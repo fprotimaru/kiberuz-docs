@@ -8,6 +8,7 @@ import (
 	"kiber-docs/docs"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 )
 
@@ -18,10 +19,12 @@ func main() {
 	flag.Parse()
 
 	app := fiber.New()
+	app.Use(compress.New(compress.ConfigDefault))
 	app.Use("/docs", filesystem.New(filesystem.Config{
 		Root:   http.FS(docs.FS),
 		Index:  "index.html",
 		Browse: true,
 	}))
+
 	log.Fatalln(app.Listen(port))
 }
